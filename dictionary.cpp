@@ -109,11 +109,12 @@ bool is_in_dict(Dictionary dict, const char* word)
       //}
 
     //}
-    while (tolower(current->word[i])==tolower(word[i])&&i<count) {
+    while (tolower(current->word[i])==tolower(word[i])&&i<count)
+    {
       i++;
     }
-    if (i==count) {
-      return true;
+    if (i==count){//+1) {       //wenn ich count+1 rechne unt unten bei void insert_sorted  if (is_in_dict(dict,word)==true) return; auskommentiere geht der letzte Test
+      return true;          //aber der Test case_insensitivity nicht???
     }
 
 
@@ -153,14 +154,30 @@ void insert_sorted(Dictionary dict, const char* word)
   Node new_Node=(Node)malloc(sizeof(NodeImplementation));
   new_Node->word=word;
   new_Node->next=0;
-  if (dict->head==0) {
+
+  //if (is_in_dict(dict,word)==true) return;
+
+  if (current==0) {
     dict->head=new_Node;
     dict->last=new_Node;
     dict->size++;
+    return;                                       //return added
   }
-  else{
-    dict->last->next=new_Node;
-    dict->last=new_Node;
+
+  if (strcmp(current->word,word) > 0) //if added
+  {
+    new_Node->next = current;
+    dict->head = new_Node;
     dict->size++;
+  }
+
+   else{                                                                      //else changed + while added
+     while (current->next != 0 && strcmp(current->next->word, word) < 0 )
+     {
+       current = current->next;
+     }
+     new_Node->next = current->next;
+     current->next =new_Node;
+     dict->size++;
   }
 }
