@@ -22,6 +22,7 @@ struct DictionaryImplementation{
   int size;
   Node head;
   Node last;
+  Node current_element; // added field
 };
 
 struct NodeImplementation{
@@ -37,6 +38,7 @@ Dictionary new_dictionary()
   new_dictionary->size=0;
   new_dictionary->head=0;
   new_dictionary->last=0;
+  new_dictionary->current_element = 0; // init new field
   return new_dictionary;
 }
 
@@ -125,45 +127,29 @@ bool is_in_dict(Dictionary dict, const char* word)
 
 void start_iterating(Dictionary dict)
 {
-  Node current=dict->head;
-  //if (dict->head!=0) {
-    //current->start_iterating=true;
-  //}
+  dict->current_element = dict->head;
+  // removed rest of function
 }
 
 bool has_next(Dictionary dict)
 {
-  if (dict->head==0) {
-    return false;
-  }
-
-  Node current=dict->head;
-
-
-  if (current/*->next*/!=0) {
-    //current=current->next;
-    return true;
-  }
-  else{
-    return false;
-  }
+  return (dict->current_element != 0);
+  // removed rest of function
 }
 
 const char* get_next_entry(Dictionary dict)
 {
-  Node current=dict->head;
-  Node to_return=current;
+  const char* word_to_return = 0; // added word to return
   if (has_next(dict)==true) {
-    current=current->next;
-    return to_return/*->next*/->word;
+    word_to_return = dict->current_element->word; // store current word
+    dict->current_element = dict->current_element->next; // move to next entry
   }
-  else{
-    return 0;
-  }
+  return word_to_return;
 }
 
 void insert_sorted(Dictionary dict, const char* word)
 {
+  Node current = dict->head; //current added
   Node new_Node=(Node)malloc(sizeof(NodeImplementation));
   new_Node->word=word;
   new_Node->next=0;
@@ -172,9 +158,9 @@ void insert_sorted(Dictionary dict, const char* word)
     dict->last=new_Node;
     dict->size++;
   }
-  //else{
-    //dict->last->next=new_Node;
-    //dict->last=new_Node;
-    //dict->size++;
-  //}
+  else{
+    dict->last->next=new_Node;
+    dict->last=new_Node;
+    dict->size++;
+  }
 }
